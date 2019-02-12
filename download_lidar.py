@@ -150,7 +150,11 @@ with open('lidar_doc_ids.txt', 'r') as f:
     flines = f.readlines()
     for f_line in flines:
         file_name, sec_desc_dir_la = f_line.rstrip().split(',')
+        print("{} - Leyendo fichero {}".format(sec_desc_dir_la, file_name))
         data['secDescDirLA'] = sec_desc_dir_la
         response = requests.post(url, data=data)
-        with open('lidar_files/' + file_name, 'wb') as lidar_file:
-            lidar_file.write(response.content)
+        if response.status_code != 200:
+            print(response.text)
+        else:
+            with open('lidar_files/' + file_name, 'wb') as lidar_file:
+                lidar_file.write(response.content)
