@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 """
 Module containing the OWMError class as base for all other OWM errors
 

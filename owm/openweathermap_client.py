@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 """
 Module containing the OWM API main entry point
 

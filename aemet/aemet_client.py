@@ -15,7 +15,7 @@ class AEMETError(Exception):
 
 class AEMETClient:
     """
-    A class representing the AEMET API entry point. Every query to the
+    A class representing the AEMET API entry point. Every request to the
     API is done programmatically via a concrete instance of this class.
 
     The class provides methods for differents API endpoints.
@@ -40,23 +40,23 @@ class AEMETClient:
         """
 
         url = self.CONVERSATIONAL_OBSERVATION_URL.format(station_id)
-        querystring = {"api_key": self.api_key}
+        querystring = {'api_key': self.api_key}
         headers = {
-            'cache-control': "no-cache"
+            'cache-control': 'no-cache'
         }
         try:
             response = requests.get(url, headers=headers, params=querystring)
         except requests.exceptions.RequestException as re:
-            raise AEMETError('Error ocurred fetching conversational observation', re)
+            raise AEMETError('An error ocurred fetching conversational observation', re)
         if response.status_code != 200:
             raise AEMETError(response.text)
         data = response.json()
+        # Retrieve the temporary URL from which to request the data
         data_url = data['datos']
-        # Fetch data
         try:
             response = requests.get(data_url)
         except requests.exceptions.RequestException as re:
-            raise AEMETError('Error ocurred fetching conversational observation data', re)
+            raise AEMETError('An error ocurred fetching conversational observation data', re)
         if response.status_code != 200:
             raise AEMETError(response.text)
-        return  response.json()
+        return response.json()

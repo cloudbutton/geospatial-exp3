@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 """
 Weather observation classes and data structures.
 

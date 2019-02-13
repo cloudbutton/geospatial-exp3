@@ -1,10 +1,12 @@
 """
+Este script calcula el índice NDVI
 
 AUTHOR: Juanjo
 
 DATE: 06/02/2019
 
 """
+
 import os
 
 import numpy as np
