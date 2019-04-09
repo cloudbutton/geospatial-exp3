@@ -25,7 +25,7 @@ class AEMETClient:
 
     """
 
-    CONVERSATIONAL_OBSERVATION_URL = 'https://opendata.aemet.es/opendata/api/observacion/convencional/datos/estacion/{}'
+    CONVENTIONAL_OBSERVATION_URL = 'https://opendata.aemet.es/opendata/api/observacion/convencional/datos/estacion/{}'
 
     def __init__(self, api_key):
         self.api_key = api_key
@@ -34,12 +34,12 @@ class AEMETClient:
         """
         Returns weather information for conventional observation.
 
-        :returns: a dict with weather info
+        :param station_id: The id of the station from which gets the data
         :raises: *AEMETError* if there are any problems during the request.
-
+        :return: a dict with weather info
         """
 
-        url = self.CONVERSATIONAL_OBSERVATION_URL.format(station_id)
+        url = self.CONVENTIONAL_OBSERVATION_URL.format(station_id)
         querystring = {'api_key': self.api_key}
         headers = {
             'cache-control': 'no-cache'

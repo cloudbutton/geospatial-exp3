@@ -11,9 +11,11 @@ DATE: 07/02/2019
 
 from owm.openweathermap_client import OpenWeatherMapClient
 
+API_KEY = '77d76b5088577c44866d05c63a0a80d1'
 
-def fetch_weather(api_key, city_id):
-    owm_murcia = OpenWeatherMapClient(api_key, city_id)
+
+def fetch_weather(city_id):
+    owm_murcia = OpenWeatherMapClient(API_KEY, city_id)
     current_weather = owm_murcia.fetch_current_weather()
     weather = dict()
     weather['temperature'] = current_weather.get_temperature()
@@ -23,7 +25,7 @@ def fetch_weather(api_key, city_id):
 
 
 if __name__ == '__main__':
-    weather = fetch_weather('77d76b5088577c44866d05c63a0a80d1', '6355234')
+    weather = fetch_weather('6355234')
     print('Temperatura actual {}'.format(weather['temperature']))
     print('Lluvia actual {}'.format(weather['rain']))
     print('Velocidad del viento actual {}'.format(weather['wind_speed']))

@@ -8,23 +8,21 @@ DATE: 11/02/2019
 
 """
 
-import errno
 import os
 
 import requests
 from bs4 import BeautifulSoup
 
-RESULTS_DIR = 'results'
-LIDAR_FILES_DIR = 'lidar_files'
 LIDAR_IDS_DOC = 'lidar_ids_doc.txt'
 
 
-def fetch_doc_list(state_cod, whole_spain='N', lidar_ids_file=LIDAR_IDS_DOC):
+def fetch_doc_list(state_cod, lidar_data_dir, whole_spain='N', lidar_ids_file=LIDAR_IDS_DOC):
     """
     Recupera el nombre y el identificador del enlace de descarga de todos los
     ficheros LIDAR de una provincia entera.
 
     :param state_cod: Código de provincia
+    :param lidar_data_dir: Dir where to store the lidar files
     :param whole_spain: Indica si es para toda España
     :param lidar_ids_file: Nombre del fichero en el que almacenar los identificadores de los ficheros LIDAR
 
@@ -65,13 +63,14 @@ def fetch_doc_list(state_cod, whole_spain='N', lidar_ids_file=LIDAR_IDS_DOC):
             doc_list.append((file_name, file_link_id))
     print('Número de docs: {}'.format(len(doc_list)))
 
-    lidar_doc_file_path = os.path.join(RESULTS_DIR, lidar_ids_file)
+    # Save a file with all file links
+    lidar_doc_file_path = os.path.join(lidar_data_dir, lidar_ids_file)
     with open(lidar_doc_file_path, 'w') as lidar_docs_file:
         for doc in doc_list:
             lidar_docs_file.write('{},{}\n'.format(doc[0], doc[1]))
 
 
-def download_file(file_name, sec_desc_dir_la):
+def download_file(file_name, sec_desc_dir_la, lidar_data_dir):
     """
     Realiza la descarga de un fichero LIDAR a partir del id del enlace de descarga.
 
@@ -92,19 +91,12 @@ def download_file(file_name, sec_desc_dir_la):
     if response.status_code != 200:
         print(response.text)
     else:
-        lidar_files = os.path.join(RESULTS_DIR, LIDAR_FILES_DIR)
-        if not os.path.exists(lidar_files):
-            try:
-                os.makedirs(lidar_files)
-            except OSError as e:
-                if e.errno != errno.EEXIST:
-                    raise
-        file_path = os.path.join(lidar_files, file_name)
+        file_path = os.path.join(lidar_data_dir, file_name)
         with open(file_path, 'wb') as lidar_file:
             lidar_file.write(response.content)
 
 
-def download_files():
+def download_files(state, lidar_data_dir):
     """
     Este método comienza la descarga de cada uno de los ficheros LIDAR
     a partir del fichero que contiene los identificadores de los enlaces
@@ -112,21 +104,10 @@ def download_files():
 
     """
 
-    lidar_doc_file_path = os.path.join(RESULTS_DIR, LIDAR_IDS_DOC)
+    fetch_doc_list(state, lidar_data_dir)
+
+    lidar_doc_file_path = os.path.join(lidar_data_dir, LIDAR_IDS_DOC)
     with open(lidar_doc_file_path, 'r') as f:
-        flines = f.readlines()
-        for f_line in flines:
+        for f_line in f:
             file_name, sec_desc_dir_la = f_line.rstrip().split(',')
-            download_file(file_name, sec_desc_dir_la)
-
-
-if __name__ == '__main__':
-    if not os.path.exists(RESULTS_DIR):
-        try:
-            os.makedirs(RESULTS_DIR)
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
-    # El código de la provincia de Murcia es el 30
-    fetch_doc_list('30')
-    download_files()
+            download_file(file_name, sec_desc_dir_la, lidar_data_dir)
