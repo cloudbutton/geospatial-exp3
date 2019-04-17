@@ -8,13 +8,12 @@ DATE: 14/03/2019
 
 import os
 
-from osgeo import ogr
+import subprocess
 
 
 def jp2_to_gtiff(jp2_filepath, gtif_filepath, otype='Float32'):
     # Cómo instalar GDAL en Windows http://www.sigdeletras.com/2016/instalacion-de-python-y-gdal-en-windows/
 
-    import subprocess
     print('Invoca a gdal_translate')
     val = subprocess.check_call(f'gdal_translate -ot "{otype}" -of "Gtiff" {jp2_filepath} {gtif_filepath}', shell=True)
     print(f'gdal_translate ha finalizado con valor {val}')

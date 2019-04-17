@@ -13,7 +13,7 @@ import rasterio
 from rasterio import plot
 
 from constants import DATA_DIR, SENTINEL_DATA_DIR, SENTINEL_DOWNLOADS_DIR, SENTINEL_BANDS_DIR, LIDAR_DATA_DIR, \
-    SIAM_DATA_DIR, STUDY_AREAS_DIR, NDVI_DIR
+    SIAM_DATA_DIR, STUDY_AREAS_DIR, NDVI_DIR, PARCELS_DIR
 from data_fetcher import lidar
 from data_fetcher import sentinel
 from data_fetcher import siam
@@ -21,6 +21,8 @@ from geoprocesses import utils
 from geoprocesses.atmospheric_correction import AtmosphericCorrectionProcess
 from geoprocesses.crop_bands import CropBandsProcess
 from geoprocesses.ndvi import NDVIProcess
+from geoprocesses.ndvi_average import NDVIAverageByParcel
+from geoprocesses.select_parcel import SelectParcelProcess
 from geoprocesses.select_study_area import SelectStudyAreaProcess
 
 # ************************************************
@@ -49,6 +51,7 @@ def create_data_dirs():
     create_dir(LIDAR_DATA_DIR)
     create_dir(SIAM_DATA_DIR)
     create_dir(STUDY_AREAS_DIR)
+    create_dir(PARCELS_DIR)
 
 
 def show_menu():
@@ -62,6 +65,8 @@ def show_menu():
         print('[3] Obtener ficheros Lidar')
         print('[4] Obtener datos de SIAM')
         print('[5] Calcular NDVI')
+        print('[6] Seleccionar parcelas de la zona de estudio')
+        print('[7] Estadísticas por parcela de la zona de estudio')
         option = input('Introduzca una opción >> ')
 
         try:
@@ -102,6 +107,13 @@ def show_menu():
             ndvi_file = NDVIProcess.run(cropped_bands, NDVI_DIR)
             ndvi = rasterio.open(ndvi_file)
             plot.show(ndvi)
+        if option == 6:
+            parcels_file_name = SelectParcelProcess.run(PARCELS_DIR,
+                                                        'data/cart/SigPac_2019_servir.shp',
+                                                        'data/sentinel/study_areas/HOJA_005__0955_7_7.shp')
+        if option == 7:
+            ndvi_stats = NDVIAverageByParcel.run('data/parcels/HOJA_005__0955_7_7.shp', 'data/ndvi/T30SXG_20190106T105431_10m-HOJA_005__0955_7_7.tiff')
+            print(ndvi_stats)
 
 
 def main():
