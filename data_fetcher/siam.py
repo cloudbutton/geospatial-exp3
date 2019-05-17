@@ -47,7 +47,7 @@ def download_weather_info(siam_data_dir):
     date_str = soup.find('input', {'id': 'P47_FECHA'})['value']
     date_str = date_str.replace('/', '_')
     csv_report_link = report_page_link + ':CSV::::'
-    print(f'Downloadinf file {csv_report_link} from {date_str}')
+    print(f'Downloading file {csv_report_link} from {date_str}')
     response = requests.get(csv_report_link)
     if response.status_code != 200:
         print('>>>>>>>>>>> Error: ' + response.text)
@@ -57,4 +57,4 @@ def download_weather_info(siam_data_dir):
         file_path = os.path.join(siam_data_dir, 'siam_' + date_str + '.csv')
         with open(file_path, 'wb') as siam_csv_file:
             siam_csv_file.write(response.content)
-    print('>>> Finishec')
+    print('>>> Finish')
