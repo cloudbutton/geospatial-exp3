@@ -9,10 +9,10 @@ FECHA DE CREACIÓN: 11/02/2019
 
 """
 
-import errno
 import os
-import requests
 import urllib.parse
+
+import requests
 from bs4 import BeautifulSoup
 
 RESULTS_DIR = 'results'
@@ -58,3 +58,16 @@ def download_weather_info(siam_data_dir):
         with open(file_path, 'wb') as siam_csv_file:
             siam_csv_file.write(response.content)
     print('>>> Finish')
+
+
+def temperature_by_station(filename):
+    def clean_row(row):
+        return row.replace('"', '')
+
+    temperatures = {}
+    with open(filename, 'r', encoding='windows-1252') as csv_file:
+        next(csv_file)  # Saltamos la línea del encabezado del CSV
+        for row in csv_file:
+            values = clean_row(row).split(';')
+            temperatures[values[0]] = float(values[3].replace(',', '.'))
+    return temperatures

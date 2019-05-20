@@ -26,6 +26,7 @@ from geoprocesses.ndvi import NDVIProcess
 from geoprocesses.ndvi_average import NDVIAverageByParcel
 from geoprocesses.select_parcel import SelectParcelProcess
 from geoprocesses.select_study_area import SelectStudyAreaProcess
+from geoprocesses.det_temperature import DetTemperatureProcess
 
 # ************************************************
 #
@@ -126,6 +127,7 @@ def show_menu():
         print('[6] Seleccionar parcelas de la zona de estudio')
         print('[7] Estadísticas por parcela de la zona de estudio')
         print('[8] Vectorizar la información de las estadísticas de NDVI por parcela')
+        print('[9] Cálculo de la temperatura determinada (Estaciones de SIAM)')
         option = input('Introduzca una opción >> ')
 
         try:
@@ -200,6 +202,10 @@ def show_menu():
             print(ndvi_stats)
         if option == 8:
             VectorizeNDVIByParcel.run('data/parcels/HOJA_005__0955_7_7.shp', ndvi_stats)
+        if option == 9:
+            temperatures = siam.temperature_by_station('data/siam/siam_14_05_19.csv')
+            det_temperature = DetTemperatureProcess.run(siam_stations, temperatures)
+            print(det_temperature)
 
 
 def main():
