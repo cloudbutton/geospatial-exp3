@@ -15,7 +15,7 @@ import rasterio
 from rasterio import plot
 
 from constants import DATA_DIR, SENTINEL_DATA_DIR, SENTINEL_DOWNLOADS_DIR, SENTINEL_BANDS_DIR, LIDAR_DATA_DIR, \
-    SIAM_DATA_DIR, STUDY_AREAS_DIR, NDVI_DIR, PARCELS_DIR
+    SIAM_DATA_DIR, STUDY_AREAS_DIR, NDVI_DIR, PARCELS_DIR, LAND_DATA_DIR
 from data_fetcher import lidar
 from data_fetcher import sentinel
 from data_fetcher import siam
@@ -27,6 +27,7 @@ from geoprocesses.ndvi_average import NDVIAverageByParcel
 from geoprocesses.select_parcel import SelectParcelProcess
 from geoprocesses.select_study_area import SelectStudyAreaProcess
 from geoprocesses.det_temperature import DetTemperatureProcess
+from geoprocesses.land_filters import CultivableLandFilterProcess, UncultivableLandFilterProcess
 
 # ************************************************
 #
@@ -110,6 +111,7 @@ def create_data_dirs():
     create_dir(SIAM_DATA_DIR)
     create_dir(STUDY_AREAS_DIR)
     create_dir(PARCELS_DIR)
+    create_dir(LAND_DATA_DIR)
 
 
 def show_menu():
@@ -118,16 +120,18 @@ def show_menu():
         print('')
         print('')
         print('---------------------------------------------------------------')
-        print('[0] Salir')
-        print('[1] Descargar imágenes de SENTINEL')
-        print('[2] Aplicar corrección atmosférica')
-        print('[3] Obtener ficheros Lidar')
-        print('[4] Obtener datos de SIAM')
-        print('[5] Calcular NDVI')
-        print('[6] Seleccionar parcelas de la zona de estudio')
-        print('[7] Estadísticas por parcela de la zona de estudio')
-        print('[8] Vectorizar la información de las estadísticas de NDVI por parcela')
-        print('[9] Cálculo de la temperatura determinada (Estaciones de SIAM)')
+        print('[0]  Salir')
+        print('[1]  Descargar imágenes de SENTINEL')
+        print('[2]  Aplicar corrección atmosférica')
+        print('[3]  Obtener ficheros Lidar')
+        print('[4]  Obtener datos de SIAM')
+        print('[5]  Calcular NDVI')
+        print('[6]  Seleccionar parcelas de la zona de estudio')
+        print('[7]  Estadísticas por parcela de la zona de estudio')
+        print('[8]  Vectorizar la información de las estadísticas de NDVI por parcela')
+        print('[9]  Cálculo de la temperatura determinada (Estaciones de SIAM)')
+        print('[10] Determinar las áreas de suelo agrícola')
+        print('[11] Determinar las áreas de suelo no agrícola')
         option = input('Introduzca una opción >> ')
 
         try:
@@ -206,6 +210,12 @@ def show_menu():
             temperatures = siam.temperature_by_station('data/siam/siam_14_05_19.csv')
             det_temperature = DetTemperatureProcess.run(siam_stations, temperatures)
             print(det_temperature)
+        if option == 10:
+            CultivableLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_agricola.shp')
+            print('El proceso finalizó')
+        if option == 11:
+            UncultivableLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_no_agricola.shp')
+            print('El proceso finalizó')
 
 
 def main():
