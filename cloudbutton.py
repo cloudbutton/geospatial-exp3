@@ -27,7 +27,8 @@ from geoprocesses.ndvi_average import NDVIAverageByParcel
 from geoprocesses.select_parcel import SelectParcelProcess
 from geoprocesses.select_study_area import SelectStudyAreaProcess
 from geoprocesses.det_temperature import DetTemperatureProcess
-from geoprocesses.land_filters import CultivableLandFilterProcess, UncultivableLandFilterProcess
+from geoprocesses.land_filters import CultivableLandFilterProcess, UncultivableLandFilterProcess, \
+    IrrigatedLandFilterProcess, WoodLandFilterProcess, CultivatedLandFilterProcess, NakedLandFilterProcess
 
 # ************************************************
 #
@@ -132,6 +133,10 @@ def show_menu():
         print('[9]  Cálculo de la temperatura determinada (Estaciones de SIAM)')
         print('[10] Determinar las áreas de suelo agrícola')
         print('[11] Determinar las áreas de suelo no agrícola')
+        print('[12] Determinar las áreas de suelo de regadío')
+        print('[13] Determinar las áreas de suelo arbolado')
+        print('[14] Determinar las áreas de suelo cultivado')
+        print('[15] Determinar las áreas de suelo desnudo')
         option = input('Introduzca una opción >> ')
 
         try:
@@ -215,6 +220,20 @@ def show_menu():
             print('El proceso finalizó')
         if option == 11:
             UncultivableLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_no_agricola.shp')
+            print('El proceso finalizó')
+        if option == 12:
+            IrrigatedLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_regadio.shp')
+            print('El proceso finalizó')
+        if option == 13:
+            WoodLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_arbolado.shp')
+            print('El proceso finalizó')
+        if option == 14:
+            ndvi_file_abspath = os.path.join(NDVI_DIR, 'T30SXG_20190106T105431_10m-HOJA_005__0955_7_7.tiff')
+            CultivatedLandFilterProcess.run(ndvi_file_abspath, LAND_DATA_DIR, 'out_cultivado.tiff')
+            print('El proceso finalizó')
+        if option == 15:
+            ndvi_file_abspath = os.path.join(NDVI_DIR, 'T30SXG_20190106T105431_10m-HOJA_005__0955_7_7.tiff')
+            NakedLandFilterProcess.run(ndvi_file_abspath, LAND_DATA_DIR, 'out_desnudo.tiff')
             print('El proceso finalizó')
 
 

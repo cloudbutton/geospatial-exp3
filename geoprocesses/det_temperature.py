@@ -7,8 +7,6 @@ DATE: 06/02/2019
 
 """
 
-import os
-
 
 class DetTemperatureProcess:
 

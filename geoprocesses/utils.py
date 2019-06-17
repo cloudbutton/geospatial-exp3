@@ -34,3 +34,22 @@ def select_b4_b8_bands(product_dir):
         if '_B08_' in band_file:
             b8 = os.path.join(img_data_dir, band_file)
     return b4, b8
+
+
+def get_gdal_calc_path():
+    try:
+        import gdal_calc
+    except ImportError:
+        return None
+    return os.path.abspath(gdal_calc.__file__)
+
+
+def ndvi_filter_calc(ndvi_file_path, calc_expr, dst_dir, out_filename, nodata='0', typeof='Byte'):
+    gdal_calc_path = get_gdal_calc_path()
+
+    output_file_path = os.path.join(dst_dir, out_filename)
+
+    # Generate string of process.
+    gdal_calc_process = f'python {gdal_calc_path} -A {ndvi_file_path} --outfile={output_file_path} --calc={calc_expr} --NoDataValue={nodata} --type={typeof}'
+
+    subprocess.check_call(gdal_calc_process, shell=True)

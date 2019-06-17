@@ -6,9 +6,10 @@ DATE: 02/04/2019
 
 """
 
-import ogr
 import os
 import subprocess
+
+from geoprocesses.utils import ndvi_filter_calc
 
 
 def create_filtered_shapefile(in_shapefile, filter_fields, dst_dir, out_shapefile_name):
@@ -52,3 +53,37 @@ class UncultivableLandFilterProcess:
             'uso_sigpac': ['AG', 'CA', 'ED', 'FO', 'IM', 'PA', 'PR', 'ZU', 'ZV']
         }
         return create_filtered_shapefile(in_shapefile, filter_fields, dst_dir, out_shapefile_name)
+
+
+class IrrigatedLandFilterProcess:
+
+    @staticmethod
+    def run(in_shapefile, dst_dir, out_shapefile_name):
+        filter_fields = {
+            'uso_sigpac': ['CI', 'CF', 'CS', 'CV', 'FF', 'FY', 'IV', 'OC', 'OF', 'TA', 'TH', 'VF', 'VI']
+        }
+        return create_filtered_shapefile(in_shapefile, filter_fields, dst_dir, out_shapefile_name)
+
+
+class WoodLandFilterProcess:
+
+    @staticmethod
+    def run(in_shapefile, dst_dir, out_shapefile_name):
+        filter_fields = {
+            'uso_sigpac': ['CI', 'CF', 'CS', 'CV', 'FF', 'FL', 'FS', 'FV', 'FY', 'OC', 'OF', 'OV', 'VF', 'VO']
+        }
+        return create_filtered_shapefile(in_shapefile, filter_fields, dst_dir, out_shapefile_name)
+
+
+class CultivatedLandFilterProcess:
+
+    @staticmethod
+    def run(ndvi_file_path, dst_dir, out_filename):
+        ndvi_filter_calc(ndvi_file_path, '"254 * (A >= 0.3)"', dst_dir, out_filename)
+
+
+class NakedLandFilterProcess:
+
+    @staticmethod
+    def run(ndvi_file_path, dst_dir, out_filename):
+        ndvi_filter_calc(ndvi_file_path, '"254 * (A < 0.3)"', dst_dir, out_filename)

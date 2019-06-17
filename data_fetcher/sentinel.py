@@ -13,10 +13,8 @@ https://sentinelsat.readthedocs.io/en/stable/api.html
 """
 
 import collections
-import errno
 import os
 import os.path
-import shutil
 import zipfile
 
 import sentinelsat
