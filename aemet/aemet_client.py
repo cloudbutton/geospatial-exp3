@@ -18,7 +18,7 @@ class AEMETClient:
     A class representing the AEMET API entry point. Every request to the
     API is done programmatically via a concrete instance of this class.
 
-    The class provides methods for differents API endpoints.
+    The class provides methods for different API endpoints.
 
     :param str api_key: API key to get access to AEMET API
     :returns: an *AEMETClient* instance

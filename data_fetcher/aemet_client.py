@@ -12,6 +12,7 @@ AUTHOR: Juanjo
 DATE: 07/02/2019
 
 """
+import json
 
 from aemet.aemet_client import AEMETClient
 
@@ -38,3 +39,8 @@ def todays_weather():
     # velocidad del viento
     print('Velocidad del viento: {}'.format(last_observation['vv']))
     return last_observation
+
+
+if __name__ == '__main__':
+    response = todays_weather()
+    print(json.dumps(response))

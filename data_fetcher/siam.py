@@ -9,10 +9,10 @@ FECHA DE CREACIÓN: 11/02/2019
 
 """
 
-import errno
 import os
-import requests
 import urllib.parse
+
+import requests
 from bs4 import BeautifulSoup
 
 RESULTS_DIR = 'results'
@@ -47,7 +47,7 @@ def download_weather_info(siam_data_dir):
     date_str = soup.find('input', {'id': 'P47_FECHA'})['value']
     date_str = date_str.replace('/', '_')
     csv_report_link = report_page_link + ':CSV::::'
-    print(f'Downloadinf file {csv_report_link} from {date_str}')
+    print(f'Downloading file {csv_report_link} from {date_str}')
     response = requests.get(csv_report_link)
     if response.status_code != 200:
         print('>>>>>>>>>>> Error: ' + response.text)
@@ -57,4 +57,17 @@ def download_weather_info(siam_data_dir):
         file_path = os.path.join(siam_data_dir, 'siam_' + date_str + '.csv')
         with open(file_path, 'wb') as siam_csv_file:
             siam_csv_file.write(response.content)
-    print('>>> Finishec')
+    print('>>> Finish')
+
+
+def temperature_by_station(filename):
+    def clean_row(row):
+        return row.replace('"', '')
+
+    temperatures = {}
+    with open(filename, 'r', encoding='windows-1252') as csv_file:
+        next(csv_file)  # Saltamos la línea del encabezado del CSV
+        for row in csv_file:
+            values = clean_row(row).split(';')
+            temperatures[values[0]] = float(values[3].replace(',', '.'))
+    return temperatures
