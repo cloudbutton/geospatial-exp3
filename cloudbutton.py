@@ -206,35 +206,62 @@ def show_menu():
             end = time.time()
             print(f'>>> Tiempo de ejecución de la selección de parcelas: {end - start}')
         if option == 7:
+            start = time.time()
             global ndvi_stats
             ndvi_stats = NDVIAverageByParcel.run('data/parcels/HOJA_005__0955_7_7.shp', 'data/ndvi/T30SXG_20190106T105431_10m-HOJA_005__0955_7_7.tiff')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo del NDVI medio por parcela: {end - start}')
             print(ndvi_stats)
         if option == 8:
+            start = time.time()
             VectorizeNDVIByParcel.run('data/parcels/HOJA_005__0955_7_7.shp', ndvi_stats)
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo del NDVI vectorizado por parecla: {end - start}')
         if option == 9:
+            start = time.time()
             temperatures = siam.temperature_by_station('data/siam/siam_14_05_19.csv')
             det_temperature = DetTemperatureProcess.run(siam_stations, temperatures)
             print(det_temperature)
+            end = time.time()
+            print(f'>>> Tiempo de ejecución de la temperatura determinada: {end - start}')
         if option == 10:
+            start = time.time()
             CultivableLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_agricola.shp')
             print('El proceso finalizó')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo del suelo agrícola: {end - start}')
         if option == 11:
+            start = time.time()
             UncultivableLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_no_agricola.shp')
             print('El proceso finalizó')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo del suelo no agrícola: {end - start}')
         if option == 12:
+            start = time.time()
             IrrigatedLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_regadio.shp')
             print('El proceso finalizó')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo de suelo de regadío: {end - start}')
         if option == 13:
+            start = time.time()
             WoodLandFilterProcess.run('data/parcels/HOJA_005__0955_7_7.shp', LAND_DATA_DIR, 'out_arbolado.shp')
             print('El proceso finalizó')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo de suelo arbolado: {end - start}')
         if option == 14:
+            start = time.time()
             ndvi_file_abspath = os.path.join(NDVI_DIR, 'T30SXG_20190106T105431_10m-HOJA_005__0955_7_7.tiff')
             CultivatedLandFilterProcess.run(ndvi_file_abspath, LAND_DATA_DIR, 'out_cultivado.tiff')
             print('El proceso finalizó')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo de suelo cultivado: {end - start}')
         if option == 15:
+            start = time.time()
             ndvi_file_abspath = os.path.join(NDVI_DIR, 'T30SXG_20190106T105431_10m-HOJA_005__0955_7_7.tiff')
             NakedLandFilterProcess.run(ndvi_file_abspath, LAND_DATA_DIR, 'out_desnudo.tiff')
             print('El proceso finalizó')
+            end = time.time()
+            print(f'>>> Tiempo de ejecución del cálculo de suelo desnudo: {end - start}')
 
 
 def main():
