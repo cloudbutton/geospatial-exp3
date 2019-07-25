@@ -37,7 +37,6 @@ from geoprocesses.land_filters import CultivableLandFilterProcess, UncultivableL
 # ************************************************
 
 # SENTINEL
-from geoprocesses.vectorize_ndvi import VectorizeNDVIByParcel
 
 TILES = ['30SXG']
 ndvi_stats = None
@@ -170,7 +169,7 @@ def show_menu():
             end = time.time()
             print(f'>>> Tiempo de ejecución de la descarga de información meteorológica de SIAM: {end - start}')
         if option == 5:
-            map_sheet_shp = 'data/cart/03_Hojas05_Murcia.shp'
+            map_sheet_shp = 'sample_data/03_Hojas05_Murcia.shp'
             filter_field = 'HOJA_005'
             filter_value = '0955-7-7'
             start = time.time()
@@ -178,9 +177,8 @@ def show_menu():
             end = time.time()
             print(f'>>> Tiempo de ejecución de la selección del área de estudio: {end - start}')
 
-            product_dir = os.path.join(SENTINEL_DOWNLOADS_DIR,
-                                       'S2A_MSIL2A_20190106T105431_N0207_R051_T30SXG_20190106T112304.SAFE')
-            b4_b8 = utils.select_b4_b8_bands(product_dir)
+            b4_b8 = ('sample_data/T30SXG_20190106T105431_B04_10m.jp2',
+                     'sample_data/T30SXG_20190106T105431_B08_10m.jp2')
 
             start = time.time()
             cropped_bands = CropBandsProcess.run(b4_b8, study_area, SENTINEL_BANDS_DIR)
@@ -214,7 +212,7 @@ def show_menu():
             print(ndvi_stats)
         if option == 8:
             start = time.time()
-            VectorizeNDVIByParcel.run('data/parcels/HOJA_005__0955_7_7.shp', ndvi_stats)
+            # VectorizeNDVIByParcel.run('data/parcels/HOJA_005__0955_7_7.shp', ndvi_stats)
             end = time.time()
             print(f'>>> Tiempo de ejecución del cálculo del NDVI vectorizado por parecla: {end - start}')
         if option == 9:
